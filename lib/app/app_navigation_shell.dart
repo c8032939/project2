@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project2/core/constants/app_strings.dart';
+import 'package:project2/shared/widgets/app_surface_card.dart';
 
 class AppNavigationShell extends StatelessWidget {
   const AppNavigationShell({required this.navigationShell, super.key});
@@ -28,11 +29,9 @@ class AppNavigationShell extends StatelessWidget {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.78),
-                  borderRadius: BorderRadius.circular(32),
-                ),
+              child: AppSurfaceCard(
+                padding: EdgeInsets.zero,
+                borderRadius: const BorderRadius.all(Radius.circular(32)),
                 child: Row(
                   children: [
                     SizedBox(
@@ -54,7 +53,6 @@ class AppNavigationShell extends StatelessWidget {
                             const SizedBox(height: 24),
                             Expanded(
                               child: NavigationRail(
-                                backgroundColor: Colors.transparent,
                                 selectedIndex: navigationShell.currentIndex,
                                 onDestinationSelected: _onDestinationSelected,
                                 labelType: NavigationRailLabelType.all,
@@ -156,36 +154,30 @@ class _PhaseSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Daily flow', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Text(AppStrings.phaseSummary, style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final phase in AppStrings.defaultPhaseOrder)
-                  Chip(
-                    label: Text(phase),
-                    visualDensity: useCompactLayout
-                        ? VisualDensity.compact
-                        : VisualDensity.standard,
-                    backgroundColor: theme.colorScheme.surface,
-                  ),
-              ],
-            ),
-          ],
-        ),
+    return AppSurfaceCard(
+      tone: AppSurfaceTone.accent,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Daily flow', style: theme.textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text(AppStrings.phaseSummary, style: theme.textTheme.bodyMedium),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final phase in AppStrings.defaultPhaseOrder)
+                Chip(
+                  label: Text(phase),
+                  visualDensity: useCompactLayout
+                      ? VisualDensity.compact
+                      : VisualDensity.standard,
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
