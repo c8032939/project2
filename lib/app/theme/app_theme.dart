@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project2/core/constants/app_constants.dart';
 
 final class AppTheme {
   AppTheme._();
@@ -66,7 +67,7 @@ final class AppTheme {
         backgroundColor: surface.withValues(alpha: 0.96),
         indicatorColor: accentSoft,
         surfaceTintColor: Colors.transparent,
-        height: 72,
+        height: AppConstants.navigationBarHeight,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           return TextStyle(
             fontSize: 12,

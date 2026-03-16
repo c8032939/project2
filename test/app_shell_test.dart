@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:project2/app/app.dart';
 import 'package:project2/app/router.dart';
 import 'package:project2/app/theme/app_theme.dart';
+import 'package:project2/core/constants/app_config.dart';
+import 'package:project2/core/constants/app_constants.dart';
 import 'package:project2/core/services/notification_coordinator.dart';
 import 'package:project2/features/routine/data/local_routine_settings_repository.dart';
 
@@ -11,6 +13,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StandaholicApp(
+        config: AppConfig.fromEnvironment(),
         router: createAppRouter(),
         notificationCoordinator: NotificationCoordinator(),
         routineSettingsRepository: LocalRoutineSettingsRepository(),
@@ -19,7 +22,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('Standaholic'), findsOneWidget);
+    expect(find.text(AppConstants.appName), findsOneWidget);
     expect(find.text('Timer'), findsOneWidget);
     expect(find.text('Daily flow'), findsOneWidget);
     expect(find.text('Current phase'), findsOneWidget);
@@ -33,7 +36,7 @@ void main() {
     expect(theme.scaffoldBackgroundColor, AppTheme.background);
     expect(theme.colorScheme.primary, AppTheme.accent);
     expect(theme.colorScheme.secondary, AppTheme.warmAccent);
-    expect(theme.navigationBarTheme.height, 72);
+    expect(theme.navigationBarTheme.height, AppConstants.navigationBarHeight);
   });
 
   testWidgets('navigates to placeholder settings and statistics routes', (
@@ -41,6 +44,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       StandaholicApp(
+        config: AppConfig.fromEnvironment(),
         router: createAppRouter(initialLocation: AppRoute.timer.path),
         notificationCoordinator: NotificationCoordinator(),
         routineSettingsRepository: LocalRoutineSettingsRepository(),
@@ -70,5 +74,34 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  test('app config keeps safe defaults and sanitizes unsupported routes', () {
+    final defaultConfig = AppConfig.fromEnvironment();
+    final configured = AppConfig.fromEnvironment(
+      environment: 'production',
+      initialLocation: '/unknown',
+    );
+
+    expect(defaultConfig.appName, AppConstants.appName);
+    expect(defaultConfig.environment, AppEnvironment.development);
+    expect(defaultConfig.initialLocation, AppConstants.rootRoutePath);
+    expect(defaultConfig.enableDiagnostics, isTrue);
+
+    expect(configured.environment, AppEnvironment.production);
+    expect(configured.initialLocation, AppConstants.rootRoutePath);
+    expect(configured.enableDiagnostics, isFalse);
+    expect(configured.isProduction, isTrue);
+  });
+
+  test('app config accepts supported environment-safe route overrides', () {
+    final config = AppConfig.fromEnvironment(
+      environment: 'staging',
+      initialLocation: AppConstants.statisticsRoutePath,
+    );
+
+    expect(config.environment, AppEnvironment.staging);
+    expect(config.initialLocation, AppConstants.statisticsRoutePath);
+    expect(config.enableDiagnostics, isTrue);
   });
 }
