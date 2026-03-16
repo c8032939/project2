@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project2/core/constants/app_strings.dart';
 
 class AppNavigationShell extends StatelessWidget {
   const AppNavigationShell({required this.navigationShell, super.key});
@@ -8,47 +9,132 @@ class AppNavigationShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bool useRail = MediaQuery.sizeOf(context).width >= 840;
 
     if (useRail) {
       return Scaffold(
-        body: SafeArea(
-          child: Row(
-            children: [
-              NavigationRail(
-                selectedIndex: navigationShell.currentIndex,
-                onDestinationSelected: _onDestinationSelected,
-                labelType: NavigationRailLabelType.all,
-                destinations: _destinations
-                    .map(
-                      (destination) => NavigationRailDestination(
-                        icon: Icon(destination.icon),
-                        label: Text(destination.label),
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.scaffoldBackgroundColor,
+                theme.colorScheme.surfaceContainerLowest,
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.78),
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 260,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 24, 16, 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.appName,
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              AppStrings.navigationSummary,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                            const SizedBox(height: 24),
+                            Expanded(
+                              child: NavigationRail(
+                                backgroundColor: Colors.transparent,
+                                selectedIndex: navigationShell.currentIndex,
+                                onDestinationSelected: _onDestinationSelected,
+                                labelType: NavigationRailLabelType.all,
+                                leading: _PhaseSummaryCard(
+                                  useCompactLayout: false,
+                                ),
+                                destinations: _destinations
+                                    .map(
+                                      (destination) =>
+                                          NavigationRailDestination(
+                                            icon: Icon(destination.icon),
+                                            label: Text(destination.label),
+                                          ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
-                    .toList(),
+                    ),
+                    VerticalDivider(
+                      width: 1,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                    Expanded(child: navigationShell),
+                  ],
+                ),
               ),
-              const VerticalDivider(width: 1),
-              Expanded(child: navigationShell),
-            ],
+            ),
           ),
         ),
       );
     }
 
     return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onDestinationSelected,
-        destinations: _destinations
-            .map(
-              (destination) => NavigationDestination(
-                icon: Icon(destination.icon),
-                label: destination.label,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.scaffoldBackgroundColor,
+              theme.colorScheme.surfaceContainerLowest,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: _PhaseSummaryCard(useCompactLayout: true),
               ),
-            )
-            .toList(),
+              Expanded(child: navigationShell),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: NavigationBar(
+              selectedIndex: navigationShell.currentIndex,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: _destinations
+                  .map(
+                    (destination) => NavigationDestination(
+                      icon: Icon(destination.icon),
+                      label: destination.label,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -57,6 +143,50 @@ class AppNavigationShell extends StatelessWidget {
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
+    );
+  }
+}
+
+class _PhaseSummaryCard extends StatelessWidget {
+  const _PhaseSummaryCard({required this.useCompactLayout});
+
+  final bool useCompactLayout;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Daily flow', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(AppStrings.phaseSummary, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final phase in AppStrings.defaultPhaseOrder)
+                  Chip(
+                    label: Text(phase),
+                    visualDensity: useCompactLayout
+                        ? VisualDensity.compact
+                        : VisualDensity.standard,
+                    backgroundColor: theme.colorScheme.surface,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
