@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project2/core/constants/app_constants.dart';
 
 enum AppSurfaceTone { base, muted, accent, warm }
 
@@ -6,7 +7,9 @@ class AppSurfaceCard extends StatelessWidget {
   const AppSurfaceCard({
     required this.child,
     this.padding = const EdgeInsets.all(20),
-    this.borderRadius = const BorderRadius.all(Radius.circular(24)),
+    this.borderRadius = const BorderRadius.all(
+      Radius.circular(AppConstants.surfaceRadius),
+    ),
     this.tone = AppSurfaceTone.base,
     super.key,
   });

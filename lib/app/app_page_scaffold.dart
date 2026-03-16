@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project2/core/constants/app_constants.dart';
 import 'package:project2/shared/widgets/app_surface_card.dart';
 
 class AppPageScaffold extends StatelessWidget {
@@ -20,17 +21,23 @@ class AppPageScaffold extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 960),
+        constraints: const BoxConstraints(
+          maxWidth: AppConstants.pageContentMaxWidth,
+        ),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Column(
             children: [
               AppSurfaceCard(
                 padding: const EdgeInsets.all(24),
-                borderRadius: const BorderRadius.all(Radius.circular(28)),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(AppConstants.featureHeaderRadius),
+                ),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final bool stackContent = constraints.maxWidth < 640;
+                    final bool stackContent =
+                        constraints.maxWidth <
+                        AppConstants.compactHeaderBreakpoint;
 
                     if (stackContent) {
                       return Column(
@@ -86,7 +93,7 @@ class _HeaderText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Desk rhythm', style: theme.textTheme.titleSmall),
+        Text(AppConstants.appShellEyebrow, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         Text(title, style: theme.textTheme.displaySmall),
         const SizedBox(height: 12),
