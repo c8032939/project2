@@ -1,0 +1,85 @@
+name: PR Review and Flutter Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  flutter-tests:
+    name: Flutter tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.4'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run Flutter tests
+        run: flutter test
+
+  codex-review:
+    name: Codex review
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Codex CLI
+        run: npm install -g @openai/codex
+
+      - name: Run Codex review
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "OPENAI_API_KEY secret is missing."
+            exit 1
+          fi
+
+          codex exec review \
+            --base "origin/${{ github.base_ref }}" \
+            --dangerously-bypass-approvals-and-sandbox \
+            -o codex_review.md \
+            "Review this pull request for correctness, architecture alignment with AGENTS.md, missing tests, regression risks, and maintainability. Give concise actionable findings. If there are no meaningful issues, say so clearly." || true
+
+          if [ ! -s codex_review.md ]; then
+            cat > codex_review.md <<'EOF'
+          Codex review did not produce a summary.
+          EOF
+          fi
+
+      - name: Comment review on PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "## Codex Review"
+            echo
+            cat codex_review.md
+          } > pr_comment.md
+
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body-file pr_comment.md
