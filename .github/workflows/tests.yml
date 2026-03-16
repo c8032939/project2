@@ -1,4 +1,4 @@
-name: PR Review and Flutter Tests
+name: Flutter Tests
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   flutter-tests:
-    name: Flutter tests
+    name: Run Flutter tests
     runs-on: ubuntu-latest
 
     steps:
