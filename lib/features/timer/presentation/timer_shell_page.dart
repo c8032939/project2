@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project2/app/app_page_scaffold.dart';
+import 'package:project2/core/constants/app_constants.dart';
 import 'package:project2/core/constants/app_strings.dart';
 import 'package:project2/features/routine/application/routine_settings_bloc.dart';
 import 'package:project2/features/timer/application/timer_bloc.dart';
@@ -15,7 +16,7 @@ class TimerShellPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AppPageScaffold(
-      title: AppStrings.appName,
+      title: AppConstants.appName,
       description: AppStrings.shellHeading,
       action: const AppInfoPanel(
         title: 'Today\'s rhythm',

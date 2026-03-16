@@ -1,13 +1,14 @@
 import 'package:project2/app/app_navigation_shell.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project2/core/constants/app_constants.dart';
 import 'package:project2/features/settings/presentation/settings_placeholder_page.dart';
 import 'package:project2/features/statistics/presentation/statistics_placeholder_page.dart';
 import 'package:project2/features/timer/presentation/timer_shell_page.dart';
 
 enum AppRoute {
-  timer(name: 'timer', path: '/timer'),
-  settings(name: 'settings', path: '/settings'),
-  statistics(name: 'statistics', path: '/statistics');
+  timer(name: 'timer', path: AppConstants.timerRoutePath),
+  settings(name: 'settings', path: AppConstants.settingsRoutePath),
+  statistics(name: 'statistics', path: AppConstants.statisticsRoutePath);
 
   const AppRoute({required this.name, required this.path});
 
@@ -15,7 +16,9 @@ enum AppRoute {
   final String path;
 }
 
-GoRouter createAppRouter({String initialLocation = '/'}) {
+GoRouter createAppRouter({
+  String initialLocation = AppConstants.rootRoutePath,
+}) {
   return GoRouter(
     initialLocation: initialLocation,
     routes: [
@@ -55,7 +58,7 @@ GoRouter createAppRouter({String initialLocation = '/'}) {
       ),
     ],
     redirect: (context, state) {
-      if (state.matchedLocation == '/') {
+      if (state.matchedLocation == AppConstants.rootRoutePath) {
         return AppRoute.timer.path;
       }
 

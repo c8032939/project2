@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project2/core/constants/app_constants.dart';
 import 'package:project2/core/constants/app_strings.dart';
 import 'package:project2/shared/widgets/app_surface_card.dart';
 
@@ -11,7 +12,9 @@ class AppNavigationShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool useRail = MediaQuery.sizeOf(context).width >= 840;
+    final bool useRail =
+        MediaQuery.sizeOf(context).width >=
+        AppConstants.desktopNavigationBreakpoint;
 
     if (useRail) {
       return Scaffold(
@@ -31,7 +34,9 @@ class AppNavigationShell extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: AppSurfaceCard(
                 padding: EdgeInsets.zero,
-                borderRadius: const BorderRadius.all(Radius.circular(32)),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(AppConstants.shellSurfaceRadius),
+                ),
                 child: Row(
                   children: [
                     SizedBox(
@@ -42,7 +47,7 @@ class AppNavigationShell extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppStrings.appName,
+                              AppConstants.appName,
                               style: theme.textTheme.headlineSmall,
                             ),
                             const SizedBox(height: 8),
@@ -168,9 +173,9 @@ class _PhaseSummaryCard extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (final phase in AppStrings.defaultPhaseOrder)
+              for (final phase in AppConstants.defaultPhaseOrder)
                 Chip(
-                  label: Text(phase),
+                  label: Text(phase.label),
                   visualDensity: useCompactLayout
                       ? VisualDensity.compact
                       : VisualDensity.standard,
