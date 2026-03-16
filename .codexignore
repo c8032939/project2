@@ -1,0 +1,31 @@
+# Build outputs
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+
+# Platform/generated artifacts
+**/Generated.xcconfig
+**/generated_plugin_registrant.*
+**/Flutter/ephemeral/
+**/.plugin_symlinks/
+
+# Tooling / IDE
+.idea/
+.vscode/
+*.iml
+
+# Git / OS
+.git/
+.DS_Store
+Thumbs.db
+
+# Coverage / reports
+coverage/
+*.log
+
+# Optional local env files
+.env
+.env.*
