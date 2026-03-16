@@ -4,6 +4,7 @@ import 'package:project2/app/app_page_scaffold.dart';
 import 'package:project2/core/constants/app_strings.dart';
 import 'package:project2/features/routine/application/routine_settings_bloc.dart';
 import 'package:project2/features/timer/application/timer_bloc.dart';
+import 'package:project2/shared/widgets/app_info_panel.dart';
 import 'package:project2/shared/widgets/section_card.dart';
 
 class TimerShellPage extends StatelessWidget {
@@ -16,7 +17,10 @@ class TimerShellPage extends StatelessWidget {
     return AppPageScaffold(
       title: AppStrings.appName,
       description: AppStrings.shellHeading,
-      action: _DeskRhythmPanel(bodyTextStyle: theme.textTheme.bodyMedium),
+      action: const AppInfoPanel(
+        title: 'Today\'s rhythm',
+        body: AppStrings.shellBody,
+      ),
       child: Column(
         children: [
           BlocBuilder<TimerBloc, TimerState>(
@@ -40,13 +44,7 @@ class TimerShellPage extends StatelessWidget {
                       spacing: 8,
                       runSpacing: 8,
                       children: phaseOrder
-                          .map(
-                            (phase) => Chip(
-                              label: Text(phase.label),
-                              backgroundColor:
-                                  theme.colorScheme.surfaceContainerHighest,
-                            ),
-                          )
+                          .map((phase) => Chip(label: Text(phase.label)))
                           .toList(),
                     ),
                   ],
@@ -82,35 +80,6 @@ class TimerShellPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _DeskRhythmPanel extends StatelessWidget {
-  const _DeskRhythmPanel({required this.bodyTextStyle});
-
-  final TextStyle? bodyTextStyle;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Today\'s rhythm', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Text(AppStrings.shellBody, style: bodyTextStyle),
-          ],
-        ),
       ),
     );
   }
