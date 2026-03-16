@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:project2/app/app.dart';
 import 'package:project2/app/router.dart';
+import 'package:project2/app/theme/app_theme.dart';
 import 'package:project2/core/services/notification_coordinator.dart';
 import 'package:project2/features/routine/data/local_routine_settings_repository.dart';
 
@@ -24,6 +25,15 @@ void main() {
     expect(find.text('Current phase'), findsOneWidget);
     expect(find.text('Sitting'), findsWidgets);
     expect(find.text('Sitting -> Standing -> Walking'), findsOneWidget);
+  });
+
+  test('app theme exposes the shared calm palette', () {
+    final theme = AppTheme.light();
+
+    expect(theme.scaffoldBackgroundColor, AppTheme.background);
+    expect(theme.colorScheme.primary, AppTheme.accent);
+    expect(theme.colorScheme.secondary, AppTheme.warmAccent);
+    expect(theme.navigationBarTheme.height, 72);
   });
 
   testWidgets('navigates to placeholder settings and statistics routes', (
