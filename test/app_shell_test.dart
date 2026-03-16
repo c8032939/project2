@@ -5,7 +5,7 @@ import 'package:project2/core/services/notification_coordinator.dart';
 import 'package:project2/features/routine/data/local_routine_settings_repository.dart';
 
 void main() {
-  testWidgets('renders the standaholic shell with default routine', (
+  testWidgets('redirects the root route to the timer shell', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
@@ -19,8 +19,35 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Standaholic'), findsOneWidget);
+    expect(find.text('Timer'), findsOneWidget);
     expect(find.text('Current phase'), findsOneWidget);
     expect(find.text('Sitting'), findsWidgets);
     expect(find.text('Sitting -> Standing -> Walking'), findsOneWidget);
+  });
+
+  testWidgets('navigates to placeholder settings and statistics routes', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      StandaholicApp(
+        router: createAppRouter(initialLocation: AppRoute.timer.path),
+        notificationCoordinator: NotificationCoordinator(),
+        routineSettingsRepository: LocalRoutineSettingsRepository(),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Routine settings'), findsOneWidget);
+    expect(find.text('Navigation foundation'), findsOneWidget);
+
+    await tester.tap(find.text('Statistics'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Statistics'), findsWidgets);
+    expect(find.text('Prepared for growth'), findsOneWidget);
   });
 }
