@@ -1,0 +1,3 @@
+class NotificationsPlaceholder {
+  const NotificationsPlaceholder();
+}
