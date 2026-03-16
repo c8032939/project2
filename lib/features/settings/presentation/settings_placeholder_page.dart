@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project2/app/app_page_scaffold.dart';
+import 'package:project2/shared/widgets/app_info_panel.dart';
+import 'package:project2/shared/widgets/app_surface_card.dart';
 import 'package:project2/shared/widgets/section_card.dart';
 
 class SettingsPlaceholderPage extends StatelessWidget {
@@ -7,24 +9,14 @@ class SettingsPlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AppPageScaffold(
       title: 'Routine settings',
       description:
           'This route is reserved for routine order, phase lengths, and future reminder controls.',
-      action: DecoratedBox(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.secondary.withValues(alpha: 0.14),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'Settings will stay local-first and calm by default.',
-            style: theme.textTheme.bodyLarge,
-          ),
-        ),
+      action: const AppInfoPanel(
+        title: 'Settings posture',
+        body: 'Settings will stay local-first and calm by default.',
+        tone: AppSurfaceTone.warm,
       ),
       child: const SectionCard(
         title: 'Navigation foundation',

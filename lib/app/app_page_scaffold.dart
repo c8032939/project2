@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project2/shared/widgets/app_surface_card.dart';
 
 class AppPageScaffold extends StatelessWidget {
   const AppPageScaffold({
@@ -16,8 +17,6 @@ class AppPageScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -26,47 +25,42 @@ class AppPageScaffold extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Column(
             children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final bool stackContent = constraints.maxWidth < 640;
+              AppSurfaceCard(
+                padding: const EdgeInsets.all(24),
+                borderRadius: const BorderRadius.all(Radius.circular(28)),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final bool stackContent = constraints.maxWidth < 640;
 
-                      if (stackContent) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _HeaderText(title: title, description: description),
-                            if (action != null) ...[
-                              const SizedBox(height: 20),
-                              action!,
-                            ],
-                          ],
-                        );
-                      }
-
-                      return Row(
+                    if (stackContent) {
+                      return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: _HeaderText(
-                              title: title,
-                              description: description,
-                            ),
-                          ),
+                          _HeaderText(title: title, description: description),
                           if (action != null) ...[
-                            const SizedBox(width: 24),
-                            Flexible(child: action!),
+                            const SizedBox(height: 20),
+                            action!,
                           ],
                         ],
                       );
-                    },
-                  ),
+                    }
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _HeaderText(
+                            title: title,
+                            description: description,
+                          ),
+                        ),
+                        if (action != null) ...[
+                          const SizedBox(width: 24),
+                          Flexible(child: action!),
+                        ],
+                      ],
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 24),
@@ -92,6 +86,8 @@ class _HeaderText extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text('Desk rhythm', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
         Text(title, style: theme.textTheme.displaySmall),
         const SizedBox(height: 12),
         Text(description, style: theme.textTheme.bodyLarge),
